@@ -19,7 +19,7 @@ class _TaskItemState extends State<TaskItem> {
       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Slidable(
         startActionPane: ActionPane(
-          extentRatio: .3,
+          extentRatio: .2,
           motion: DrawerMotion(),
           children: [
             SlidableAction(
