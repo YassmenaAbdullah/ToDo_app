@@ -70,7 +70,6 @@ class DialogUtils {
         ),
       ));
     }
-
     showDialog(
       context: context,
       builder: (buildContext) {
