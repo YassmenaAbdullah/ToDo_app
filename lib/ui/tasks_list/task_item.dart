@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:toda/database/my_database.dart';
+import 'package:toda/database/task.dart';
+import 'package:toda/utils/dialog_utils.dart';
 
 class TaskItem extends StatefulWidget {
-  const TaskItem({Key? key}) : super(key: key);
+  Task task;
+
+  TaskItem(this.task);
 
   @override
   State<TaskItem> createState() => _TaskItemState();
@@ -23,7 +28,9 @@ class _TaskItemState extends State<TaskItem> {
           motion: DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: (buildContext) {},
+              onPressed: (buildContext) {
+                deleteTask();
+              },
               backgroundColor: Colors.red,
               icon: Icons.delete,
               label: 'delete',
@@ -60,7 +67,7 @@ class _TaskItemState extends State<TaskItem> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Title',
+                      widget.task.title,
                       style: Theme.of(context).textTheme.headline6?.copyWith(
                             color: Theme.of(context).primaryColor,
                           ),
@@ -69,7 +76,7 @@ class _TaskItemState extends State<TaskItem> {
                       height: 5,
                     ),
                     Text(
-                      'Description',
+                      widget.task.description,
                       style: Theme.of(context).textTheme.headline4,
                     ),
                   ],
@@ -95,6 +102,22 @@ class _TaskItemState extends State<TaskItem> {
           ),
         ),
       ),
+    );
+  }
+
+  void deleteTask() {
+    DialogUtils.showMessage(
+      context,
+      'Are you sure. you want to delete this task',
+      posActionText: 'Yes',
+      posAction: () async {
+        DialogUtils.showProgressDialog(context, 'Loading..');
+        await MyDatabase.deleteTask(widget.task);
+        DialogUtils.hideDialog(context);
+        DialogUtils.showMessage(context, 'Task Deleted successfully',
+            posActionText: 'Ok', negActionText: 'Undo', negAction: () {});
+      },
+      negActionText: 'Cancel',
     );
   }
 }

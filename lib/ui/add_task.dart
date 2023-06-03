@@ -143,12 +143,26 @@ class _AddTaskState extends State<AddTask> {
         description: descriptionController.text,
         dataTime: selectedDate);
     DialogUtils.showProgressDialog(context, 'Loading... ');
-    await MyDatabase.insertTask(task);
-    DialogUtils.hideDialog(context);
-    DialogUtils.showMessage(context, 'Task inserted successfully',
-        posActionText: 'Done', posAction: () {
-      Navigator.pop(context);
-    }, isDismissible: false);
+    try {
+      await MyDatabase.insertTask(task);
+      DialogUtils.hideDialog(context);
+      DialogUtils.showMessage(context, 'Task inserted successfully',
+          posActionText: 'Done', posAction: () {
+        Navigator.pop(context);
+      }, isDismissible: false);
+    } catch (e) {
+      DialogUtils.hideDialog(context);
+      DialogUtils.showMessage(context, 'Error inserting task',
+          posActionText: 'Try again ',
+          posAction: () {
+            insertTask();
+          },
+          negActionText: 'Cancel',
+          negAction: () {
+            Navigator.pop(context);
+          },
+          isDismissible: true);
+    }
   }
 
   void showTaskDatePicker() async {
